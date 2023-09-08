@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Article Retriever</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #2e4482, #090909);
+            position: relative;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Overlay */
+        body::before {
+            content: "";
+            background-image: url('https://www.researchgate.net/profile/Nancy-Longnecker/publication/264742373/figure/fig3/AS:296008585105420@1447585354849/Scientific-knowledge-word-cloud-for-student-ideas-n-721-generated-in-group-meaning.png');
+            background-size: 50%;
+            background-position: center;
+            background-repeat: no-repeat;
+            mix-blend-mode: multiply; /* blend the white background with the gradient */
+            opacity: 0.7;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .letter {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .content {
+            flex: 1; /* sticks to bottom */
+        }
+
+        .navbar {
+            background: #000000;
+            opacity: 1;
+        }
+
+        .navbar-brand {
+            color: #bdbaba !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="/">Article Retriever</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Menu
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/faq">FAQ</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="content"> <!-- Start main content wrapper -->
