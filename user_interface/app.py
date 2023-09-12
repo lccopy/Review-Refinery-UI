@@ -18,7 +18,7 @@ def search():
     params = {'query': keywords}
 
     # Make a GET request to the API with the parameters
-    api_url = 'http://127.0.0.1:5007/topic_search'
+    api_url = 'https://systematicreview-m5r6r5yvzq-ew.a.run.app/topic_search'
     response = requests.get(api_url, params=params)
 
     if response.status_code == 200:
