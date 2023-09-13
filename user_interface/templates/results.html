@@ -23,40 +23,67 @@
         .card-link:hover {
             text-decoration: underline;
         }
+        .expand-text {
+          font-size: 0.5em;
+          vertical-align: super;
+          margin-right: 5px;
+          color: #3f8aff
+        }
     </style>
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <h1 class="mb-4 text-white">Recommended Topics</h1>
+      <div class="d-flex justify-content-between">
+        <a href="/" class="btn btn-primary mb-3"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        <a href="#terminologySection" class="btn btn-primary mb-3"><i class="fas fa-arrow-down"></i> Go to Terminology</a>
+    </div>
+      <h1 class="mb-4 text-white">Recommended Topics for: "{{ keywords }}"</h1>
+        <form action="/filter" method="post" style="margin-bottom: 20px;">
+          <label for="probabilityThreshold" class="text-white">Article~Topic relevancy<sup>*</sup> threshold (default 80,0%):</label>
+          <input type="number" name="probabilityThreshold" id="probabilityThreshold" class="form-control" value="{{ probability_threshold * 100 }}" min="0" max="100">
+          <input type="hidden" name="keywords" value="{{ keywords }}">  <!-- Store the keywords -->
+          <button type="submit" class="btn btn-primary mt-2">Filter</button>
+      </form>
         <div class="row">
           {% for topic in recommended_topics %}
           <div class="col-md-4 mb-4">
-              <div class="card" style="width: 18rem;">
-                  <div class="card-body">
-                    <h5 class="card-title" data-toggle="collapse" data-target="#articles-{{ topic.topic_id }}">
-                      {{ topic.topic_name|format_topic }}
-                      <i class="fas fa-chevron-down arrow-icon"></i>
-                  </h5>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title" data-toggle="collapse" data-target="#articles-{{ topic.topic_id }}">
+                    {{ topic.topic_name|format_topic }}
+                    <i class="fas fa-chevron-down arrow-icon"></i>
+                    <span class="expand-text">show articles</span>
+                </h5>
 
-                      <p class="card-text">
-                          <strong>Topic ID:</strong> {{ topic.topic_id }}<br>
-                          <strong>Probability:</strong> {{ (topic.topic_prob|float * 100)|round }}%<br>
-                          <strong>Article Count:</strong> {{ topic.article_count }}<br>
-                      </p>
-                  </div>
-                  <ul class="list-group list-group-flush collapse" id="articles-{{ topic.topic_id }}">
-                      {% for article in topic.article_list %}
-                      <li class="list-group-item">
-                          <a href="{{ article.article_url }}" target="_blank">Article ID: {{ article.article_id }} (Probability: {{ (article.article_prob|float * 100)|round }}%)</a>
-                      </li>
-                      {% endfor %}
-                  </ul>
+                {# Calculate the count of articles exceeding the given probability_threshold #}
+                {% set count_array = [] %}
+                {% for article in topic.article_list %}
+                {% if article.article_prob|float > probability_threshold %}
+                {% set _ = count_array.append(1) %}
+                {% endif %}
+                {% endfor %}
+
+                <p class="card-text">
+                    <!--  <strong>Topic ID:</strong> {{ topic.topic_id }}<br>-->
+                    <strong>Topic~Prompt likelihood<sup>**</sup>:</strong> {{ (topic.topic_prob|float * 100)|round }}%<br>
+                    <strong>Article Count:</strong> {{ count_array|length }}<br>
+                </p>
+                </div>
+
+                <ul class="list-group list-group-flush collapse" id="articles-{{ topic.topic_id }}">
+                  {% for article in topic.article_list if article.article_prob|float > probability_threshold %}
+                  <li class="list-group-item">
+                        <a href="{{ article.article_url }}" target="_blank">Article ID: {{ article.article_id }}</a>
+                        <p> AtT Probability¹: {{ (article.article_prob|float * 100)|round }}% </p>
+                    </li>
+                    {% endfor %}
+                </ul>
                   <div class="card-body">
-                      <a href="#" class="card-link" data-toggle="collapse" data-target="#keywords-{{ topic.topic_id }}">See Keywords</a>
+                      <a href="#" class="card-link" data-toggle="collapse" data-target="#keywords-{{ topic.topic_id }}">Keywords</a>
                   </div>
                   <div class="collapse" id="keywords-{{ topic.topic_id }}">
                       <div class="card-body">
-                          <strong>Keywords:</strong> {{ topic.topic_representation|join(", ") }}<br>
+                        <i>{{ topic.topic_representation|join(", ") }}</i><br>
                       </div>
                   </div>
               </div>
@@ -64,6 +91,23 @@
           {% endfor %}
         </div>
     </div>
+    <div class="container mt-5 mb-5" id="terminologySection">
+      <div class="row">
+          <div class="col-12">
+              <div class="card" style="background-color: #2e76dd; color: white;">
+                  <div class="card-body">
+                      <h4 class="card-title">Terminology</h4>
+                      <p class="card-text">
+                        <sup>*</sup>Relevancy of the article to the topic: This metric gauges how well an article pertains to and fits within a particular theme, assessing the degree of alignment between the article's content and the chosen topic.
+                      </p>
+                      <p class="card-text">
+                        <sup>**</sup>Likelihood of the topics to the prompt: This metric evaluates the degree a topic aligns with and addresses the specific requirements or context presented by the user in his prompt, indicating how suitable and pertinent the topic is in the given context.
+                      </p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
 
     <script>
         $(document).ready(function(){
