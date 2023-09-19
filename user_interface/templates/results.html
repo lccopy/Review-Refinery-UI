@@ -73,8 +73,9 @@
                 <ul class="list-group list-group-flush collapse" id="articles-{{ topic.topic_id }}">
                   {% for article in topic.article_list if article.article_prob|float > probability_threshold %}
                   <li class="list-group-item">
-                        <a href="{{ article.article_url }}" target="_blank">Article ID: {{ article.article_id }}</a>
-                        <p> AtT Probability¹: {{ (article.article_prob|float * 100)|round }}% </p>
+                        <a href="{{ article.article_url }}" target="_blank"><p>{{ article.article_title }}</p></a>
+                        <p> <b>Article~Topic relevancy*</b>: {{ (article.article_prob|float * 100)|round }}% </p>
+
                     </li>
                     {% endfor %}
                 </ul>
